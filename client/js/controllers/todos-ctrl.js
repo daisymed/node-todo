@@ -5,7 +5,7 @@ angular.module('todoController', [])
 		$scope.formData = {};
 		$scope.loading = true;
 
-		// GET =====================================================================
+		// GET ========
 		// when landing on the page, get all todos and show them
 		// use the service to get all the todos
 		Todos.get()
@@ -14,7 +14,7 @@ angular.module('todoController', [])
 				$scope.loading = false;
 			});
 
-		// CREATE ==================================================================
+		// CREATE =====
 		// when submitting the add form, send the text to the node API
 		$scope.createTodo = function() {
 
@@ -34,5 +34,30 @@ angular.module('todoController', [])
 					});
 			}
 		};
+
+		// UPDATE ==================================================================
+		// when checking an item set the boolean to true in the node API
+		$scope.updateTodo = function(index) {
+			$scope.loading = true;
+			alert("index = " + index + ", done = " + $scope.todos[index].done);
+			Todos.update($scope.todos[index])
+				.success(function(data) {
+					$scope.loading = false;
+					$scope.todos = data;
+				});
+		};
+
+
+	// This deletes a todo after checking it.
+    $scope.deleteTodo = function(id) {
+        $http.delete('/api/todos/' + id)
+            .success(function(data) {
+                $scope.todos = data;
+                console.log(data);
+            })
+            .error(function(data) {
+                console.log('Error: ' + data);
+            });
+    };
 
 	}]);
